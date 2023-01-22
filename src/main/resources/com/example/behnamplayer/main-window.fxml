@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<VBox alignment="CENTER" fx:controller="com.example.behnamplayer.MainWindowController" xmlns:fx="http://javafx.com/fxml">
+    <HBox VBox.vgrow="ALWAYS">
+        <TextField focusTraversable="false" promptText="Please choose a directory" fx:id="directoryField" editable="false" HBox.hgrow="ALWAYS"/>
+        <Button text="Choose Directory" fx:id="chooseDirectoryButton" onAction="#onChooseDirectoryButtonClicked" />
+    </HBox>
+    <HBox>
+        <Button onAction="#onPreviousButtonClicked" text="Previous"/>
+        <Button onAction="#onPlayButtonClicked" text="Play"/>
+        <Button onAction="#onNextButtonClicked" text="Next"/>
+        <Button onAction="#onPauseButtonClicked" text="Pause"/>
+        <Button onAction="#onStopButtonClicked" text="Stop"/>
+    </HBox>
+</VBox>
