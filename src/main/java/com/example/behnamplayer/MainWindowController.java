@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class MainWindowController {
     public TextField directoryField;
     public Button chooseDirectoryButton;
+    public Button shuffleButton;
     private MediaUtilities media;
 
     public void onChooseDirectoryButtonClicked(ActionEvent actionEvent) throws InvalidDataException, UnsupportedTagException, IOException {
@@ -51,5 +52,9 @@ public class MainWindowController {
 
     public void onStopButtonClicked(ActionEvent actionEvent) {
         this.media.stop();
+    }
+
+    public void onShuffleButtonClicked(ActionEvent actionEvent) {
+        shuffleButton.setText("Shuffle: " + media.toggleShuffle());
     }
 }

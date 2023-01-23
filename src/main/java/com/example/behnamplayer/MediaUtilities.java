@@ -11,12 +11,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MediaUtilities {
     private final ArrayList<Path> musicsList;
     private MediaPlayer mediaPlayer;
     private int currentSongNumber = 0;
     private double whichSecondPaused;
+    private boolean isShuffle = false;
 
     public MediaUtilities(ArrayList<Path> musicsList) {
         this.musicsList = musicsList;
@@ -26,12 +28,19 @@ public class MediaUtilities {
         if (this.mediaPlayer != null) {
             this.mediaPlayer.stop();
         }
-        currentSongNumber = whichMusic;
-        Mp3File currentSong = new Mp3File(musicsList.get(currentSongNumber).toAbsolutePath().toString());
+        // TODO: check if music exists
+        Path currentMusicPath;
+        if (this.isShuffle) {
+            currentMusicPath = musicsList.get(new Random().nextInt(this.musicsList.size()));
+        } else {
+            currentSongNumber = whichMusic;
+            currentMusicPath = musicsList.get(currentSongNumber);
+        }
+        Mp3File currentSong = new Mp3File(currentMusicPath.toAbsolutePath().toString());
         if (fromSecond < 0 || fromSecond > currentSong.getLengthInSeconds()) {
             throw new InvalidDataException();
         } else {
-            String songPath = new File(musicsList.get(currentSongNumber).toString()).toURI().toString();
+            String songPath = new File(currentMusicPath.toString()).toURI().toString();
             System.out.println("Playing " + songPath);
             this.mediaPlayer = new MediaPlayer(new Media(songPath));
             this.mediaPlayer.setStartTime(new Duration(fromSecond * 1000));
@@ -75,5 +84,10 @@ public class MediaUtilities {
         } else {
             return play(musicsList.size() - 1);
         }
+    }
+
+    public boolean toggleShuffle() {
+        this.isShuffle = !this.isShuffle;
+        return this.isShuffle;
     }
 }

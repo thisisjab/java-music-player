@@ -18,5 +18,6 @@
         <Button onAction="#onNextButtonClicked" text="Next"/>
         <Button onAction="#onPauseButtonClicked" text="Pause"/>
         <Button onAction="#onStopButtonClicked" text="Stop"/>
+        <Button onAction="#onShuffleButtonClicked" text="Shuffle: false" fx:id="shuffleButton"/>
     </HBox>
 </VBox>
