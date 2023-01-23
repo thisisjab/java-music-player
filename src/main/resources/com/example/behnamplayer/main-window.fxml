@@ -7,8 +7,8 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.text.Text?>
-<VBox alignment="CENTER" fx:controller="com.example.behnamplayer.MainWindowController" xmlns:fx="http://javafx.com/fxml">
-    <HBox VBox.vgrow="ALWAYS">
+<VBox alignment="TOP_CENTER" fx:controller="com.example.behnamplayer.MainWindowController" xmlns:fx="http://javafx.com/fxml">
+    <HBox>
         <TextField focusTraversable="false" promptText="Please choose a directory" fx:id="directoryField" editable="false" HBox.hgrow="ALWAYS"/>
         <Button text="Choose Directory" fx:id="chooseDirectoryButton" onAction="#onChooseDirectoryButtonClicked" />
     </HBox>
@@ -24,5 +24,10 @@
     <HBox>
         <Label text="00:00" fx:id="musicTimeLabel"/>
         <Slider min="0" max="1" fx:id="musicTimeSlider" onMouseDragReleased="#onMusicTimeSliderDragged" onMouseReleased="#onMusicTimeSliderDragged" onMouseDragOver="#onMusicTimeSliderDragged"/>
+    </HBox>
+    <HBox>
+        <Label text="Search Something..."/>
+        <TextField fx:id="searchField"/>
+        <Button text="Find" onAction="#onFindButtonClicked"/>
     </HBox>
 </VBox>

@@ -21,24 +21,26 @@ public class MainWindowController {
     public Button repeatButton;
     public Slider musicTimeSlider;
     public Label musicTimeLabel;
+    public TextField searchField;
     private MediaUtilities media;
     private Mp3File currentMusic;
     private int currentSongNumber = 0;
     private int musicsCount;
     private Timer musicTimer;
     private long currentSecond = 0;
+    private ArrayList<Path> musicsList;
 
     public void onChooseDirectoryButtonClicked(ActionEvent actionEvent) throws InvalidDataException, UnsupportedTagException, IOException {
         String chosenDirectoryPath = FileUtilities.getDirectoryFromUserDialog(new Stage());
         if (!chosenDirectoryPath.equals("")) {
-            ArrayList<Path> musicsList = (ArrayList<Path>) FileUtilities.getAllMusicsInDirectory(chosenDirectoryPath);
-            musicsList = FileUtilities.sortPathList(musicsList, "track");
-            this.musicsCount = musicsList.size();
-            if (musicsList.size() == 0) {
+            this.musicsList = (ArrayList<Path>) FileUtilities.getAllMusicsInDirectory(chosenDirectoryPath);
+            this.musicsList = FileUtilities.sortPathList(this.musicsList, "track");
+            this.musicsCount = this.musicsList.size();
+            if (this.musicsList.size() == 0) {
                 new Alert(Alert.AlertType.WARNING, "Directory has no songs", ButtonType.OK).showAndWait();
             } else {
                 directoryField.setText(chosenDirectoryPath);
-                this.media = new MediaUtilities(musicsList);
+                this.media = new MediaUtilities(this.musicsList);
             }
         } else {
             new Alert(Alert.AlertType.WARNING, "No directory has been chosen!", ButtonType.OK).showAndWait();
@@ -61,7 +63,6 @@ public class MainWindowController {
         this.musicTimer = new Timer();
         // TODO: fix currentSecond limit
         // TODO: add search
-        // TODO: sort
         musicTimeSlider.valueProperty().addListener((observable, oldValue, newValue) ->
                 musicTimeLabel.setText(secondsToTimeString(Long.parseLong(newValue.toString()), currentMusic.getLengthInSeconds())));
     }
@@ -101,5 +102,14 @@ public class MainWindowController {
 
     private String secondsToTimeString(long seconds, long totalSeconds) {
         return seconds / 60 + ":" + seconds % 60 + " | " + totalSeconds / 60 + ":" + totalSeconds % 60;
+    }
+
+    public void onFindButtonClicked(ActionEvent actionEvent) throws InvalidDataException, UnsupportedTagException, IOException {
+        String itemToSearch = searchField.getText();
+        System.out.println("Searching for " + itemToSearch);
+        System.out.println("Our songs are " + this.musicsList.toString());
+        ArrayList<Path> foundSongs = FileUtilities.search(this.musicsList, itemToSearch);
+        System.out.println("I found songs below: ");
+        System.out.println(foundSongs.toString());
     }
 }

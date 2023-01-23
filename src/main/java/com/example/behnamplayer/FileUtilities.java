@@ -96,4 +96,25 @@ public final class FileUtilities {
 
         return musicsPathList;
     }
+
+    public static ArrayList<Path> search(ArrayList<Path> musicsPathList, String searchValue) throws InvalidDataException, UnsupportedTagException, IOException {
+        ArrayList<String> generatedValues = new ArrayList<String>(); // This is list of all track titles + album name and artist name
+        ArrayList<Path> foundSongs = new ArrayList<Path>();
+
+        for (Path path : musicsPathList) {
+            Mp3File currentSong = new Mp3File(path.toAbsolutePath().toString());
+            String currentSongTitle = currentSong.getId3v2Tag().getTitle();
+            String currentSongArtist = currentSong.getId3v2Tag().getArtist();
+            generatedValues.add(currentSongTitle + " " + currentSongArtist);
+        }
+
+        for (int i = 0; i < generatedValues.size(); i++) {
+            String value = generatedValues.get(i);
+            if (value.toLowerCase().contains(searchValue.toLowerCase())) {
+                foundSongs.add(musicsPathList.get(i));
+            }
+        }
+
+        return foundSongs;
+    }
 }
