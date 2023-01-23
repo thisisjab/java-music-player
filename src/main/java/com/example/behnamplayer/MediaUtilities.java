@@ -43,6 +43,13 @@ public class MediaUtilities {
             String songPath = new File(currentMusicPath.toString()).toURI().toString();
             System.out.println("Playing " + songPath);
             this.mediaPlayer = new MediaPlayer(new Media(songPath));
+            this.mediaPlayer.setOnEndOfMedia(() -> {
+                try {
+                    this.next();
+                } catch (InvalidDataException | UnsupportedTagException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             this.mediaPlayer.setStartTime(new Duration(fromSecond * 1000));
             this.mediaPlayer.play();
         }
