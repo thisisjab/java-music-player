@@ -12,6 +12,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Timer;
 
 public class MainWindowController {
     public TextField directoryField;
@@ -24,11 +25,14 @@ public class MainWindowController {
     private Mp3File currentMusic;
     private int currentSongNumber = 0;
     private int musicsCount;
+    private Timer musicTimer;
+    private long currentSecond = 0;
 
     public void onChooseDirectoryButtonClicked(ActionEvent actionEvent) throws InvalidDataException, UnsupportedTagException, IOException {
         String chosenDirectoryPath = FileUtilities.getDirectoryFromUserDialog(new Stage());
         if (!chosenDirectoryPath.equals("")) {
             ArrayList<Path> musicsList = (ArrayList<Path>) FileUtilities.getAllMusicsInDirectory(chosenDirectoryPath);
+            musicsList = FileUtilities.sortPathList(musicsList, "track");
             this.musicsCount = musicsList.size();
             if (musicsList.size() == 0) {
                 new Alert(Alert.AlertType.WARNING, "Directory has no songs", ButtonType.OK).showAndWait();
@@ -53,6 +57,13 @@ public class MainWindowController {
 
     public void onPlayButtonClicked(ActionEvent actionEvent) throws InvalidDataException, UnsupportedTagException, IOException {
         this.currentMusic = this.media.play(currentSongNumber);
+        this.musicTimeLabel.setText(secondsToTimeString(currentSecond, currentMusic.getLengthInSeconds()));
+        this.musicTimer = new Timer();
+        // TODO: fix currentSecond limit
+        // TODO: add search
+        // TODO: sort
+        musicTimeSlider.valueProperty().addListener((observable, oldValue, newValue) ->
+                musicTimeLabel.setText(secondsToTimeString(Long.parseLong(newValue.toString()), currentMusic.getLengthInSeconds())));
     }
 
     public void onNextButtonClicked(ActionEvent actionEvent) throws InvalidDataException, UnsupportedTagException, IOException {
@@ -66,10 +77,12 @@ public class MainWindowController {
     }
 
     public void onPauseButtonClicked(ActionEvent actionEvent) {
+        this.musicTimer.cancel();
         this.media.pause();
     }
 
     public void onStopButtonClicked(ActionEvent actionEvent) {
+        this.musicTimer.cancel();
         this.musicTimeSlider.setValue(0);
         this.media.stop();
     }
@@ -84,5 +97,9 @@ public class MainWindowController {
 
     public void onMusicTimeSliderDragged(MouseEvent mouseDragEvent) throws InvalidDataException, UnsupportedTagException, IOException {
         this.currentMusic = this.media.play(currentSongNumber, Duration.millis(musicTimeSlider.getValue() * currentMusic.getLengthInSeconds() * 1000).toSeconds());
+    }
+
+    private String secondsToTimeString(long seconds, long totalSeconds) {
+        return seconds / 60 + ":" + seconds % 60 + " | " + totalSeconds / 60 + ":" + totalSeconds % 60;
     }
 }
