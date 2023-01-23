@@ -23,7 +23,7 @@
     </HBox>
     <HBox>
         <Label text="00:00" fx:id="musicTimeLabel"/>
-        <Slider min="0" max="1" fx:id="musicTimeSlider" onMouseDragReleased="#onMusicTimeSliderDragged" onMouseReleased="#onMusicTimeSliderDragged" onMouseDragOver="#onMusicTimeSliderDragged"/>
+        <Slider min="0" max="1" fx:id="musicTimeSlider" onDragDropped="#onMusicTimeSliderDragged"/>
     </HBox>
     <HBox>
         <Label text="Search Something..."/>

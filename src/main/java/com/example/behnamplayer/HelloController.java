@@ -25,7 +25,8 @@ public class HelloController {
     private Label musicSeconds;
     @FXML
     private TextField secondsField;
-    public String musicPath = new File("/home/jab/Downloads/Hichkas - Ye Rooze Khoob.mp3").toURI().toString();
+    public String musicPath;
+//    public String musicPath = new File("/home/jab/Downloads/Hichkas - Ye Rooze Khoob.mp3").toURI().toString();
     // We define one media player throughout the whole application so that makes it easier to work with
     // TODO: make this player private
     public MediaPlayer mediaPlayer = new MediaPlayer(new Media(musicPath));
@@ -51,7 +52,6 @@ public class HelloController {
     }
 
     public void onChooseFileClicked(ActionEvent actionEvent) throws InvalidDataException, UnsupportedTagException, IOException {
-        // TODO: add a directory chooser instead of single file chooser
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(new Stage());
 //        System.out.println("This file has been chosen: " + selectedFile.getAbsolutePath().toString());

@@ -3,6 +3,8 @@ package com.example.behnamplayer;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -29,6 +31,8 @@ public class MainWindowController {
     private Timer musicTimer;
     private long currentSecond = 0;
     private ArrayList<Path> musicsList;
+    private KeyFrame updater = new KeyFrame(Duration.seconds(1.0), event -> notifySlider());
+    private Timeline appTimer;
 
     public void onChooseDirectoryButtonClicked(ActionEvent actionEvent) throws InvalidDataException, UnsupportedTagException, IOException {
         String chosenDirectoryPath = FileUtilities.getDirectoryFromUserDialog(new Stage());
@@ -48,6 +52,10 @@ public class MainWindowController {
     }
 
     public void onPreviousButtonClicked(ActionEvent actionEvent) throws InvalidDataException, UnsupportedTagException, IOException {
+        musicTimeLabel.setText("0:0");
+        currentSecond = 0;
+        appTimer = new Timeline(updater);
+        appTimer.play();
         this.musicTimeSlider.setValue(0);
         if (currentSongNumber > 0) {
             this.currentSongNumber -= 1;
@@ -62,12 +70,23 @@ public class MainWindowController {
         this.musicTimeLabel.setText(secondsToTimeString(currentSecond, currentMusic.getLengthInSeconds()));
         this.musicTimer = new Timer();
         // TODO: fix currentSecond limit
-        // TODO: add search
         musicTimeSlider.valueProperty().addListener((observable, oldValue, newValue) ->
                 musicTimeLabel.setText(secondsToTimeString(Long.parseLong(newValue.toString()), currentMusic.getLengthInSeconds())));
+       appTimer = new Timeline(updater);
+       appTimer.setCycleCount(Timeline.INDEFINITE);
+       appTimer.play();
+    }
+
+    private void notifySlider() {
+        currentSecond += 1;
+        this.musicTimeLabel.setText(secondsToTimeString(currentSecond, currentMusic.getLengthInSeconds()));
     }
 
     public void onNextButtonClicked(ActionEvent actionEvent) throws InvalidDataException, UnsupportedTagException, IOException {
+        currentSecond = 0;
+        musicTimeLabel.setText("0:0");
+        appTimer = new Timeline(updater);
+        appTimer.play();
         this.musicTimeSlider.setValue(0);
         if (this.currentSongNumber < this.musicsCount - 1) {
             this.currentSongNumber += 1;
@@ -78,11 +97,15 @@ public class MainWindowController {
     }
 
     public void onPauseButtonClicked(ActionEvent actionEvent) {
+        appTimer.pause();
         this.musicTimer.cancel();
         this.media.pause();
     }
 
     public void onStopButtonClicked(ActionEvent actionEvent) {
+        musicTimeLabel.setText("0:0");
+        currentSecond = 0;
+        appTimer.stop();
         this.musicTimer.cancel();
         this.musicTimeSlider.setValue(0);
         this.media.stop();
@@ -97,7 +120,10 @@ public class MainWindowController {
     }
 
     public void onMusicTimeSliderDragged(MouseEvent mouseDragEvent) throws InvalidDataException, UnsupportedTagException, IOException {
-        this.currentMusic = this.media.play(currentSongNumber, Duration.millis(musicTimeSlider.getValue() * currentMusic.getLengthInSeconds() * 1000).toSeconds());
+//        System.out.println("Slider says: " + musicTimeSlider.getValue());
+//        System.out.println("Music total time is: " + currentMusic.getLengthInSeconds());
+//        System.out.println("Now I am going to play from " + Duration.millis(musicTimeSlider.getValue() * currentMusic.getLengthInSeconds() * 1000).toSeconds());
+//        this.currentMusic = this.media.play(currentSongNumber, );
     }
 
     private String secondsToTimeString(long seconds, long totalSeconds) {
