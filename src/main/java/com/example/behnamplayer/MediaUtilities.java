@@ -19,6 +19,7 @@ public class MediaUtilities {
     private int currentSongNumber = 0;
     private double whichSecondPaused;
     private boolean isShuffle = false;
+    private boolean isRepeat = false;
 
     public MediaUtilities(ArrayList<Path> musicsList) {
         this.musicsList = musicsList;
@@ -45,7 +46,11 @@ public class MediaUtilities {
             this.mediaPlayer = new MediaPlayer(new Media(songPath));
             this.mediaPlayer.setOnEndOfMedia(() -> {
                 try {
-                    this.next();
+                    if (isRepeat) {
+                        this.play(whichMusic);
+                    } else {
+                        this.next();
+                    }
                 } catch (InvalidDataException | UnsupportedTagException | IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -96,5 +101,10 @@ public class MediaUtilities {
     public boolean toggleShuffle() {
         this.isShuffle = !this.isShuffle;
         return this.isShuffle;
+    }
+
+    public boolean toggleRepeat() {
+        this.isRepeat = !this.isRepeat;
+        return this.isRepeat;
     }
 }
