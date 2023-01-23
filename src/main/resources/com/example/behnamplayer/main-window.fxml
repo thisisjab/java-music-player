@@ -21,4 +21,8 @@
         <Button onAction="#onShuffleButtonClicked" text="Shuffle: false" fx:id="shuffleButton"/>
         <Button onAction="#onRepeatButtonClicked" text="Repeat: false" fx:id="repeatButton"/>
     </HBox>
+    <HBox>
+        <Label fx:id="musicTimeLabel"/>
+        <Slider min="0" max="1" fx:id="musicTimeSlider" onMouseDragReleased="#onMusicTimeSliderDragged" onMouseReleased="#onMusicTimeSliderDragged" onMouseDragOver="#onMusicTimeSliderDragged"/>
+    </HBox>
 </VBox>
