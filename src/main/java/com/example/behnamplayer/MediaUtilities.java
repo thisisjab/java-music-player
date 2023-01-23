@@ -16,13 +16,13 @@ public class MediaUtilities {
     private final ArrayList<Path> musicsList;
     private MediaPlayer mediaPlayer;
     private int currentSongNumber = 0;
-    private Duration whichSecondPaused;
+    private double whichSecondPaused;
 
     public MediaUtilities(ArrayList<Path> musicsList) {
         this.musicsList = musicsList;
     }
 
-    public Mp3File play(int whichMusic, int fromSecond) throws InvalidDataException, UnsupportedTagException, IOException {
+    public Mp3File play(int whichMusic, double fromSecond) throws InvalidDataException, UnsupportedTagException, IOException {
         if (this.mediaPlayer != null) {
             this.mediaPlayer.stop();
         }
@@ -41,6 +41,10 @@ public class MediaUtilities {
     }
 
     public Mp3File play(int whichMusic) throws InvalidDataException, UnsupportedTagException, IOException {
+        if (whichSecondPaused > 0) {
+            System.out.println("Playing from second " + whichSecondPaused);
+            return play(whichMusic, whichSecondPaused);
+        }
         return play(whichMusic, 0);
     }
 
@@ -49,8 +53,7 @@ public class MediaUtilities {
     }
 
     public void pause() {
-        // TODO: remember which seconds was stopped
-//        this.whichSecondPaused = this.mediaPlayer.currentTimeProperty();
+        this.whichSecondPaused = this.mediaPlayer.getCurrentTime().toSeconds();
         this.mediaPlayer.pause();
     }
 
